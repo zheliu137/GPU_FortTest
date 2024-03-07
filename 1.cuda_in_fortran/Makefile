@@ -16,7 +16,7 @@ FFILES = mainfort.f90, para.f90
 CUFILES = cuda_test.cuf cuda_test_wrapper.cuf
 OBJECTS = mainfort.o para.o
 CUDA_OBJECTS = cuda_test.o cuda_test_wrapper.o
-EXENAME=text.x
+EXENAME=test.x
 
 # NVFLAGS=-Mallocatable=95 -fPIE -gpu=sm_70
 NVFLAGS= -g -Mallocatable=95 -fPIE -gpu=sm_86,cuda12.3,nordc,debug
