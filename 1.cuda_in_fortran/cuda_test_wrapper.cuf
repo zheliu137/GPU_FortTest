@@ -1,0 +1,7 @@
+subroutine cuda_wrapper
+    use cudamod, only : testcudalib, testcudaker
+
+    CALL testcudalib()
+    CALL testcudaker()
+
+end subroutine

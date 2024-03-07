@@ -1,0 +1,43 @@
+program testcuda
+    ! Compile with "pgfortran testisamax.cuf -Mcudalib=cublas -lblas"
+    ! Use the NVIDIA cudafor and cublas modules
+    use cudafor
+    use cublas
+    use cusolverDn
+    use curand
+    implicit none
+    integer, parameter :: DP=selected_real_kind(14,200)
+    integer :: istat
+    type(curandGenerator) :: gene_rand
+    type(cublasHandle) :: h_blas
+    type(cusolverDnHandle) :: h_solver
+
+    real(kind=DP),allocatable,device :: d_a(:)
+    ! real(kind=DP),allocatable        :: h_a(:)
+    real(kind=DP)        :: h_a(10)
+    real(kind=DP)        :: h_b(10)
+    type(cudaChannelFormatDesc ) :: desc
+
+    print*,"TEST cuda memcpy function ..."
+    h_a(1)=3.0
+    istat = cudaMalloc(d_a, 10)
+    istat = cudaMemcpy(d_a, h_a, 10)
+    istat = cudaMemcpy(h_b, d_a, 10)
+    if(maxval(abs(h_b-h_a))<=1e-10) write(*,"(' TEST PASSED.')")
+    
+    print*,"TEST library handle creation and destruction..."
+    istat = cublasCreate(h_blas)
+    print *,"cublasCreate returned ",istat
+    istat = cuSolverDnCreate(h_solver)
+    print *,"cuSolverDnCreate returned ",istat
+    istat = curandCreateGenerator(gene_rand, CURAND_RNG_PSEUDO_XORWOW)
+    print *,"curandCreateGenerator returned ",istat
+    
+    istat = cublasDestroy(h_blas)
+    print *,"cublasDestroy returned ",istat
+    istat = cuSolverDnDestroy(h_solver)
+    print *,"cusolverDnDestroy returned ",istat
+    istat = curandDestroyGenerator(gene_rand)
+    print *,"curandDestroyGenerator returned ",istat
+    
+    end
