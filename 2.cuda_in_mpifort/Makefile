@@ -1,3 +1,4 @@
+
 NVIDIA_PATH=/opt/nvidia/hpc_sdk
 NV_INSTALL_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/compilers
 NV_CUDA_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/cuda/12.3
@@ -10,7 +11,7 @@ CC=mpic++
 AR=ar
 RANLIB=ranlib
 
-FFILES = mainfort.f90 para.f90 cuda_test_wrapper.f90
+FFILES = mainfort.f90, para.f90, cuda_test_wrapper.f90
 CUFILES = cuda_test.cuf 
 OBJECTS = mainfort.o para.o cuda_test_wrapper.o
 CUDA_OBJECTS = cuda_test.o 
@@ -19,7 +20,6 @@ EXENAME=test.x
 # NVFLAGS=-Mallocatable=95 -fPIE -gpu=sm_70
 NVFLAGS= -g -Mallocatable=95 -fPIE -gpu=sm_86,cuda12.3,nordc,debug
 
-# NVFLAGS=-fPIE
 FFLAGS=-fPIE -g -traceback
 
 NVLIBS=-L$(NV_INSTALL_PATH)/lib -L$(NV_CUDA_PATH) -L$(NV_CUDA_MATH_PATH) -L$(NV_CUDA_LIB_PATH) \
@@ -43,10 +43,12 @@ $(OBJECTS): %.o: %.f90
 
 cuda_test.o : para.o
 
-mainfort.o : cuda_test_wrapper.o
-
 clean:
 	    rm -f *.o
+	    rm -f *.a
 	    rm -f *.mod
-		rm -f *.a
 	    rm -f ${EXENAME}
+
+cuda_test.o : para.o
+
+mainfort.o : cuda_test_wrapper.o

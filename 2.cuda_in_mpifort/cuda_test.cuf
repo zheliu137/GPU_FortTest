@@ -17,12 +17,14 @@ module cudamod
         ! write(*,"(' thread : ', 2I6, ' a(', I6 ') = ', F15.5, ' b(', I6 ') = ', F15.5 )") &
         !                  threadIdx%x, threadIdx%y,  i, a(i), i, b(i)
         ! write(*,*) ' thread : ', threadIdx%x, threadIdx%y, "a(" , i, ') = ',  a(i)
-        print*, ' thread : ', threadIdx%x, threadIdx%y, i, a(i)
+        ! print*, ' thread : ', threadIdx%x, threadIdx%y, i, a(i)
     end subroutine kernel_print
 
-    subroutine testcudalib
+    subroutine testcudalib(mpime)
         ! 
         implicit none
+        integer,intent(in)::mpime
+
         integer :: istat
         type(curandGenerator) :: gene_rand
         type(cublasHandle) :: h_blas
@@ -34,6 +36,7 @@ module cudamod
         real(kind=DP)        :: h_b(10)
         type(cudaChannelFormatDesc ) :: desc
 
+
         integer :: i 
         print*,"DP = ", DP
         do i = 1,10
@@ -43,26 +46,28 @@ module cudamod
         istat = cudaMemcpy(d_a, h_a, 10)
         istat = cudaMemcpy(h_b, d_a, 10)
 
-        print*,"h_a = ", h_a
-        print*,"h_b = ", h_b
+        print*,"h_a = ", h_a, "mpime = ", mpime
+        print*,"h_b = ", h_b, "mpime = ", mpime
         ! print*,"d_a = ", d_a
-
-        istat = cublasCreate(h_blas)
-        print *,"cublasCreate returned ",istat
-        istat = cuSolverDnCreate(h_solver)
-        print *,"cuSolverDnCreate returned ",istat
-        istat = curandCreateGenerator(gene_rand, CURAND_RNG_PSEUDO_XORWOW)
-        print *,"curandCreateGenerator returned ",istat
-        
-        istat = cublasDestroy(h_blas)
-        print *,"cublasDestroy returned ",istat
-        istat = cuSolverDnDestroy(h_solver)
-        print *,"cusolverDnDestroy returned ",istat
-        istat = curandDestroyGenerator(gene_rand)
-        print *,"curandDestroyGenerator returned ",istat
-        
+        print*,"mpime = ", mpime
+        if(mpime == 1) then
+            istat = cublasCreate(h_blas)
+            print *,"cublasCreate returned ",istat,mpime
+            istat = cuSolverDnCreate(h_solver)
+            print *,"cuSolverDnCreate returned ",istat,mpime
+            istat = curandCreateGenerator(gene_rand, CURAND_RNG_PSEUDO_XORWOW)
+            print *,"curandCreateGenerator returned ",istat,mpime
+            
+            istat = cublasDestroy(h_blas)
+            print *,"cublasDestroy returned ",istat,mpime
+            istat = cuSolverDnDestroy(h_solver)
+            print *,"cusolverDnDestroy returned ",istat,mpime
+            istat = curandDestroyGenerator(gene_rand)
+            print *,"curandDestroyGenerator returned ",istat,mpime
+        endif
         istat = cudaFree(d_a)
-        print *,"cudaFree returned ",istat
+        print *,"cudaFree returned ",istat,mpime
+        
 
     end subroutine testcudalib
 
