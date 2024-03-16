@@ -1,0 +1,1 @@
+Test CUDA FORTRAN code with MPI and OPENMP. Nvidia Fortran compiler only.

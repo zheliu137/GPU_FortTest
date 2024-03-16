@@ -1,0 +1,5 @@
+In this example, we call CUDA Fortran functions, MPI functions, and use OpenMP directives in one Fortran program.
+
+The Fortran code is compiled with Intel Fortran compiler and the CUDA Fortran code is compiled by Nvidia Fortran compiler.
+
+Can not use modules between different compilers. The .mod file can only be used in files compiled with same compiler.

@@ -1,0 +1,102 @@
+module cudamod
+    use cudafor
+    use cublas
+    use cusolverDn
+    use curand
+    implicit none
+    INTEGER, PARAMETER :: DP=selected_real_kind(14,200)
+
+    contains
+
+    Attributes(global) subroutine kernel_print(a,b)
+        real(kind=DP) :: a(*), b(*)
+        integer :: i 
+        i = blockDim%x*(blockIdx%x-1) + threadIdx%x
+        ! j = bitrev8(threadIdx%x-1) + 1
+        ! print*, " thread : ", threadIdx%x, threadIdx%y, " DP = ", DP
+        ! write(*,"(' thread : ', 2I6, ' a(', I6 ') = ', F15.5, ' b(', I6 ') = ', F15.5 )") &
+        !                  threadIdx%x, threadIdx%y,  i, a(i), i, b(i)
+        ! write(*,*) ' thread : ', threadIdx%x, threadIdx%y, "a(" , i, ') = ',  a(i)
+        ! print*, ' thread : ', threadIdx%x, threadIdx%y, i, a(i)
+    end subroutine kernel_print
+
+    subroutine testcudalib(mpime)
+        ! 
+        implicit none
+        integer,intent(in)::mpime
+
+        integer :: istat
+        type(curandGenerator) :: gene_rand
+        type(cublasHandle) :: h_blas
+        type(cusolverDnHandle) :: h_solver
+
+        real(kind=DP),allocatable,device :: d_a(:)
+        ! real(kind=DP),allocatable        :: h_a(:)
+        real(kind=DP)        :: h_a(10)
+        real(kind=DP)        :: h_b(10)
+        type(cudaChannelFormatDesc ) :: desc
+
+
+        integer :: i 
+        print*,"DP = ", DP
+        do i = 1,10
+            h_a(i)=i
+        enddo
+        istat = cudaMalloc(d_a, 10)
+        istat = cudaMemcpy(d_a, h_a, 10)
+        istat = cudaMemcpy(h_b, d_a, 10)
+
+        print*,"h_a = ", h_a, "mpime = ", mpime
+        print*,"h_b = ", h_b, "mpime = ", mpime
+        ! print*,"d_a = ", d_a
+        print*,"mpime = ", mpime
+        if(mpime == 1) then
+            istat = cublasCreate(h_blas)
+            print *,"cublasCreate returned ",istat,mpime
+            istat = cuSolverDnCreate(h_solver)
+            print *,"cuSolverDnCreate returned ",istat,mpime
+            istat = curandCreateGenerator(gene_rand, CURAND_RNG_PSEUDO_XORWOW)
+            print *,"curandCreateGenerator returned ",istat,mpime
+            
+            istat = cublasDestroy(h_blas)
+            print *,"cublasDestroy returned ",istat,mpime
+            istat = cuSolverDnDestroy(h_solver)
+            print *,"cusolverDnDestroy returned ",istat,mpime
+            istat = curandDestroyGenerator(gene_rand)
+            print *,"curandDestroyGenerator returned ",istat,mpime
+        endif
+        istat = cudaFree(d_a)
+        print *,"cudaFree returned ",istat,mpime
+        
+
+    end subroutine testcudalib
+
+    subroutine testcudaker
+        ! 
+        implicit none
+
+        real(kind=DP),allocatable,device :: d_a(:), d_b(:)
+        ! real(kind=DP),allocatable        :: h_a(:)
+        real(kind=DP)        :: h_a(200)
+        real(kind=DP)        :: h_b(200)
+        type(cudaChannelFormatDesc ) :: desc
+
+        integer :: i 
+        integer :: istat
+        type(dim3) :: dimGrid, dimBlock
+
+        print*,"DP = ", DP
+        do i = 1,200
+            h_a(i)=i
+        enddo
+        istat = cudaMalloc(d_a, 200)
+        istat = cudaMalloc(d_b, 200)
+
+        dimGrid = dim3( 1, 1, 1 )
+        dimBlock = dim3( 16, 16, 1 )
+        call kernel_print<<<dimGrid,dimBlock>>>(d_a, d_b)
+
+        istat = cudaDeviceSynchronize()
+
+    end subroutine testcudaker
+end module
