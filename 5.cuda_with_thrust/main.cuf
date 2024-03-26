@@ -1,0 +1,30 @@
+program testsort
+    use cudafor
+    use cublas
+    use cusolverDn
+    use curand
+    use thrust
+    implicit none
+    real, allocatable :: cpuData(:)
+    real,device,allocatable :: gpuData(:)
+    integer :: N=10
+    allocate(cpuData(N))
+    allocate(gpuData(N))
+    
+    ! do i=1,
+    !     cpuData(i)=random_number(i)
+    ! end do
+    CALL random_number(cpuData)
+
+    cpuData(5)=100.
+    
+    print *,"Before sorting", cpuData
+    
+    gpuData=cpuData
+    
+    call thrustsort(gpuData,size(gpuData))
+    
+    cpuData=gpuData
+    
+    print *,"After sorting", cpuData
+    end program

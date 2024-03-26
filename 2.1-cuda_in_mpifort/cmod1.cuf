@@ -1,0 +1,39 @@
+
+MODULE cmod1
+  use cudafor
+
+  contains
+
+  attributes(global) subroutine kernel( A, B, C, N, M )
+  real, device :: A(N,M), B(N,M), C(N,M)
+  integer, value :: N, M
+  integer :: i, j, tx, ty
+  ! Get the thread indices
+  tx = threadidx%x
+  ty = threadidx%y
+  i = (blockidx%x-1) * blockdim%x + tx
+  j = (blockidx%y-1) * blockdim%y + ty
+  if (i .le. N .and. j .le. M) then
+    C(i,j) = A(i,j)+ B(i,j)
+  endif
+  end subroutine kernel
+
+  ! need to pass in arrays a automatic or assumed-shaped
+  subroutine mmul( A, B, C, N, M)
+      implicit none
+      real, dimension(n,m) :: A, B, C
+      real, device, allocatable, dimension(:,:) :: Ad, Bd, Cd
+      integer i,N,M,ierr
+      type(dim3) :: dimGrid, dimBlock
+
+      allocate(Ad(N,M), Bd(N,M), Cd(N,M))
+      Ad=A
+      Bd=B
+      dimGrid = dim3( N/16, M/16, 1 )
+      dimBlock = dim3( 16, 16, 1 )
+      call kernel<<<dimGrid,dimBlock>>>( Ad, Bd, Cd, N, M )
+      C=Cd
+      deallocate(Ad, Bd, Cd)
+
+  end subroutine mmul
+END MODULE cmod1 

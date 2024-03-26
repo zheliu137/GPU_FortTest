@@ -20,6 +20,13 @@ module cudamod
         ! print*, ' thread : ', threadIdx%x, threadIdx%y, i, a(i)
     end subroutine kernel_print
 
+    subroutine set_gpu_devices()
+        integer :: istat
+        type(cudadeviceprop) :: prop
+        istat = cudaGetDeviceProperties(prop,) 
+        print*,"cudaGetDeviceProperties returned ",istat
+    end subroutine set_gpu_devices
+
     subroutine testcudalib(mpime)
         ! 
         implicit none
