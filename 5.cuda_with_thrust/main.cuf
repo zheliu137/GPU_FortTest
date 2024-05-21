@@ -27,4 +27,4 @@ program testsort
     cpuData=gpuData
     
     print *,"After sorting", cpuData
-    end program
+end program

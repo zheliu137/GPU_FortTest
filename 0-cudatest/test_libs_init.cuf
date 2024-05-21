@@ -40,4 +40,4 @@ program testcuda
     istat = curandDestroyGenerator(gene_rand)
     print *,"curandDestroyGenerator returned ",istat
     
-    end
+end
