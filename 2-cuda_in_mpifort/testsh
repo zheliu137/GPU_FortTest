@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name="gfort_mpi"
 #SBATCH --output="%x.%j.%N.out"
-#SBATCH --partition=gpu-shared
+#SBATCH --partition=gpu-debug
 #SBATCH --gpus=2
 #SBATCH --nodes=1
 #SBATCH --ntasks=2

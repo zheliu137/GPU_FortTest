@@ -6,3 +6,4 @@
 *.i90
 **/submit.slurm
 **.out
+**/tmp
