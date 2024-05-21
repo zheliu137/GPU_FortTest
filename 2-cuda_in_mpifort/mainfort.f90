@@ -2,7 +2,7 @@ program main_program
     use cuda_wrappers, ONLY: cuda_wrapper
     implicit none
     include 'mpif.h'
-    integer::myid, ierr, nproc
+    integer :: myid, ierr, nproc
     call MPI_INIT( ierr )
     
     call MPI_COMM_RANK( MPI_COMM_WORLD, myid, ierr )

@@ -22,9 +22,10 @@ module cudamod
 
     subroutine set_gpu_devices()
         integer :: istat
+        integer :: idev
         type(cudadeviceprop) :: prop
-        istat = cudaGetDeviceProperties(prop,) 
-        print*,"cudaGetDeviceProperties returned ",istat
+        istat = cudaGetDeviceProperties(prop, idev) 
+        print*, "cudaGetDeviceProperties returned ", istat
     end subroutine set_gpu_devices
 
     subroutine testcudalib(mpime)
@@ -33,18 +34,24 @@ module cudamod
         integer,intent(in)::mpime
 
         integer :: istat
+        integer :: idev
+        integer :: i 
         type(curandGenerator) :: gene_rand
         type(cublasHandle) :: h_blas
         type(cusolverDnHandle) :: h_solver
-
+        
         real(kind=DP),allocatable,device :: d_a(:)
         ! real(kind=DP),allocatable        :: h_a(:)
         real(kind=DP)        :: h_a(10)
         real(kind=DP)        :: h_b(10)
         type(cudaChannelFormatDesc ) :: desc
-
-
-        integer :: i 
+        
+        ! istat = cudaGetDevice(idev)
+        ! print *,"cudaGetDevice returned ", istat, mpime, idev
+        
+        ! istat = cudaGetDeviceCount(idev)
+        ! print *,"cudaGetDeviceCount returned ", istat, mpime, idev
+        
         print*,"DP = ", DP
         do i = 1,10
             h_a(i)=i

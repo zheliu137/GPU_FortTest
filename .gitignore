@@ -4,3 +4,5 @@
 *.x
 *.mod
 *.i90
+**/submit.slurm
+**.out
