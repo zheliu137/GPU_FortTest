@@ -275,8 +275,6 @@ CONTAINS
       stop
     endif
 
-    print*, "number of threads?", omp_get_max_threads()
-
     n = 10000
     nloop = 1000
     

@@ -18,7 +18,8 @@ EXENAME=test.x
 
 # NVFLAGS=-Mallocatable=95 -fPIE -gpu=sm_70
 # NVFLAGS=-g -Minfo -mp=gpu
-NVFLAGS=-g -Minfo -mp=multicore
+# NVFLAGS=-g -Minfo -mp=multicore
+NVFLAGS=-g -Minfo -mp=multicore,gpu
 # NVFLAGS=-g -Minfo -Mallocatable=95 -fPIE -gpu=sm_86,cuda12.3,nordc,debug -acc=multicore -mp=multicore -cuda
 
 # NVFLAGS=-fPIE
