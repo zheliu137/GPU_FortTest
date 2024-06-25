@@ -105,8 +105,9 @@ CONTAINS
 
     mydevice_type = acc_get_device_type()
 
-
     print*, "Program is running on multiple cpus"
+
+    print*, "number of threads : ", omp_get_max_threads()
 
     n = 1000
     nloop = 1000

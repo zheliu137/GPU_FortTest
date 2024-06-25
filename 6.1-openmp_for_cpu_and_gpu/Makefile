@@ -1,8 +1,8 @@
-NVIDIA_PATH=/opt/nvidia/hpc_sdk
-NV_INSTALL_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/compilers
-NV_CUDA_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/cuda/12.3
-NV_CUDA_LIB_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/cuda/lib64
-NV_CUDA_MATH_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/math_libs/lib64
+# NVIDIA_PATH=/opt/nvidia/hpc_sdk
+# NV_INSTALL_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/compilers
+# NV_CUDA_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/cuda/12.3
+# NV_CUDA_LIB_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/cuda/lib64
+# NV_CUDA_MATH_PATH=$(NVIDIA_PATH)/Linux_x86_64/24.1/math_libs/lib64
 
 NVF90=nvfortran
 IFORT90=nvfortran
